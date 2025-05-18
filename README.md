@@ -40,5 +40,8 @@
 
 ![image](https://github.com/user-attachments/assets/74716540-c52d-4abb-a9a5-42a44b2a3e78)
 
+Перейдемо в акаунт GitHub на вкладку Packages та побачимо там Докер-образ:
+
+![image](https://github.com/user-attachments/assets/5399d390-06b6-4c5a-b40f-2c94e374655a)
 
 
