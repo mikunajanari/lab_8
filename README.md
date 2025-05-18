@@ -44,4 +44,99 @@
 
 ![image](https://github.com/user-attachments/assets/5399d390-06b6-4c5a-b40f-2c94e374655a)
 
+Коментарі до результату:
+
+```name: Build and Push Docker Image``` - Назва workflow, відображається в GitHub у вкладці Actions
+
+Визначає, коли запускається workflow:
+```
+on:
+  push:
+    branches:
+      - main
+      - feature/*
+```
+
+Дозволяє вручну запустити workflow через GitHub:
+
+```workflow_dispatch:```
+
+Дозволи для GitHub Actions (читання вмісту репозиторію та запис пакетів у GitHub Container Registry):
+
+```
+permissions:
+  contents: read
+  packages: write
+```
+
+Оголошення завдання з назвою build, яке буде виконуватись на віртуальній машині з Ubuntu останньої версії:
+
+```
+jobs:
+  build:
+    runs-on: ubuntu-latest
+```
+
+Початок списку кроків, які виконаються в рамках завдання: 
+
+```
+steps:
+```
+
+Для завантаження коду з репозиторію до віртуального середовища, де буде виконуватись збірка:
+
+```
+- name: Checkout repository
+        uses: actions/checkout@v3
+```
+
+Встановлення Node.js версії 20:
+
+```
+- name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+```
+
+Встановлення менеджера пакетів pnpm глобально:
+
+```
+ - name: Install pnpm
+        run: npm install -g pnpm
+```
+
+Встановлення залежності проєкту та виконання скриптів з package.json):
+
+```
+ - name: Install dependencies and build project
+        run: |
+          pnpm install
+          pnpm run build
+```
+
+Вхід у GitHub Container Registry:
+
+```
+ - name: Log in to GitHub Container Registry (GHCR)
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+```
+
+Створення Docker-образу із поточного контексту (.), його пуш в GHCR з тегом latest:
+
+```
+ - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ghcr.io/mikunajanari/bryzhyniuk_lb8:latest
+```
+
+
+
 
